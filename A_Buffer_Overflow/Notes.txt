@@ -1,0 +1,256 @@
+Ein Programm in C ist in folgende Speicherbereiche aufgeteilt:
+Stack
+Heap
+uninitialized data
+initialized data 
+text
+
+Heap
+Der Heap wird in C genutzt, um dynamisch Speicher für Variablen, Arrays, etc zu reservieren.
+Es wird also während der Laufzeit des Programms Speicher reserviert und wieder freigegeben.
+Dies geschieht mittels 'malloc', 'realloc' und 'calloc'. 
+Die so angelegten Variablen und ihr Speicherplatz existieren bis sie vom Programm mittels 'free' wieder
+freigegeben werden. Werden die angelegten Variablen nicht wieder freigegeben, kann es zu Memory Leaks
+kommen, d. h. das Programm reserviert immer mehr Speicher, gibt ihn aber nicht wieder frei, bis kein 
+Speicherplatz mehr verfügbar ist.
+
+Stack 
+Auf dem Stack werden die Funktionen und die dazugehörigen Informationen gespeichert.
+Ruft also ein Programm eine Funktion auf, wird die Rücksprungadresse, die übergebenen Parameter und 
+alle lokalen Variablen auf den Stack gelegt. Diese Informationen werden zusammen Stack Frame genannt, 
+was jede Funktion besitzt.
+Ist eine Funktion beendet, wird der Stack Frame wieder vom Stack genommen und das Programm springt 
+zu der Funktion, die diese Funktion aufgerufen hat.
+Das Legen einer Variable auf den Stack wird als 'push' bezeichnet und das entfernen vom Stack als 'pop'.
+Das Betriebssystem speichert typischerweise mittels eines Zeigers den Anfang des Stacks und das aktuell 
+oberste Element des Stacks.
+Der Stack ist je nach Betriebssystem und CPU unterschiedlich implementiert.
+
+Uninitialized data
+Hier werden alle globalen und statischen Variablen gespeichert, welche nicht initialisiert wurden, oder 
+zu 0 initialisiert wurden.
+
+Initialized data 
+Hier werden alle globalen und statischen Variablen gespeichert, welche vom Programmierer initialisiert 
+wurden. 
+Zusätzlich gibt es einen Bereich für read-write Zugriff und einen für read-only Zugriff.
+
+Text Segment
+In disem Segment wird der Code des Programms gespeichert, also die ausführbaren Befehle.
+Üblicherweise ist dieses Segment read-only, damit es nicht im Falle von stack- oder heap-overflows 
+überschrieben wird.
+
+Buffer Overflow
+Ein Buffer in C ist typischerweise ein Array mit einer festen Größe. Wird nun eine Datenmenge, die 
+größer ist als der Buffer, in den Buffer gespeichert, ohne dass der Speicherplatz überprüft wird, 
+dann kommt es zu einem Buffer-Overflow. Dabei wird der Speicherplatz hinter dem Buffer auch noch
+beschrieben, welcher gar nicht mehr für den Buffer reserviert ist und andere Informationen enthalten 
+kann, die überschrieben werden.
+
+Stack Overflow
+Bei einem Stack-Overflow werden Daten an eine Stelle geschrieben, die nicht dafür vorgesehen sind. 
+Zum Beipiel wenn in einen Buffer mehr Daten geschrieben werden sollen, als dafür reserviert ist.
+Ein Angriff, welcher sich einen Stack-Overflow zu Nutze macht, basiert beispielsweise auf einem 
+Buffer-Overflow. Dabei werden Daten in einen Buffer geschrieben, der auf dem Stack liegt.
+Da bei einem Buffer-Overflow über den Buffer hinaus auf den Stack geschrieben wird, kann dadurch auch 
+die Rücksprungadresse verändert werden. 
+Verlangt ein Programm ein Array(String) als Parameter, wie zum Beispiel ein Programm, was über eine Shell
+ausgeführt wird und kopiert dieses Array ohne die Länge zu überprüfen, dann wird das Eingabe-Array auf 
+den Stack kopiert und überschreibt je nach Länge auch die Rücksprungadresse. Die Funktion 'strcpy' 
+verwendet zum Beipiel kein Bounds-Checking.
+Auf diese Weise kann die Rücksprungadresse so verändert werden, dass die in den Buffer zeigt, der ja 
+das Eingabe-Array enthält. Wenn dieses Eingabe-Array nun aus ausführbaren Instruktionen besteht, werden 
+diese statt der eigentlichen ausgeführt.
+So kann beispielsweise eine Shell aufgerufen werden, auf welcher dann beliebige weitere Programme ausgeführt 
+werden können. 
+Wurde das ausgenutze Programm als root installiert, würde die aufgerufene Shell sogar root-Rechte haben.
+
+Heap Overflow
+Ein Heap-Overflow tritt auf, wenn mehr Daten in den Heap geschrieben werden sollen, als Speicherplatz für 
+den Heap verfügbar ist.
+
+--------------------------------------------------
+
+Teil 1:
+Mit Ghidra:
+- Öffne Ghidra
+- Schliesse Help Window
+- Neues Project erstellen
+- Import 'ncd' executable
+- Öffne ncd im CodeBrowser
+- Symbol Tree -> Exports -> main
+- Window -> Decompile: main erzeugt:
+
+ulong main(int iParm1,undefined8 *puParm2)
+
+{
+  int iVar1;
+  size_t sVar2;
+  char local_30 [20];
+  int local_1c;
+  undefined8 *local_18;
+  int local_10;
+  uint local_c;
+  
+  local_c = 0;
+  if (iParm1 == 3) {
+    local_1c = 0;
+    local_18 = puParm2;
+    local_10 = iParm1;
+    sVar2 = strlen((char *)puParm2[1]);
+    if (sVar2 == 8) {
+      iVar1 = strncmp((char *)local_18[1],"password",8);
+      if (iVar1 == 0) {
+        local_1c = 1;
+      }
+    }
+    strcpy(local_30,(char *)local_18[2]);
+    if (local_1c == 0) {
+      printf("Your password is not valid.\n");
+    }
+    else {
+      printf("Hello %s. Your password is correct.\n",local_30);
+    }
+    local_c = 0;
+  }
+  else {
+    local_18 = puParm2;
+    local_10 = iParm1;
+    printf("Usage: %s <password> <name>\n",*puParm2);
+    local_c = 1;
+  }
+  return (ulong)local_c;
+}
+
+Wählt man als Parameter irgendeinen Namen und als Passwort eine Zeichenfolge, die länger als 20
+Zeichen ist, hält das Programm die Kombination für korrekt.
+
+Mithilfe des von Ghidra erzeugten C-Codes lässt sich die Funktionsweise des Programms gut nachvollziehen.
+Zu Beginn der 'main' Funktion werden verschiedene lokale Variablen deklariert, für welche 
+der benötigte Speicherplatz auf dem Stack hintereinander reserviert wird.
+Dabei wird der Buffer 'local_30' mit einer Größe von 20 vor dem Integer 'local_lc' 
+auf den Stack gelegt.
+Die kritische Stelle ist in Zeile 25, wenn mittels 'strcpy' unser eingegebenes Passwort 
+in den Buffer 'local_30' kopiert werden soll. Da 'strcpy' jedoch kein Bounds-Checking 
+betreibt, überschreiben Passworteingaben, die länger als 20 Zeichen sind, die Variablen, 
+die nach dem Buffer auf dem Stack liegen. In diesem Fall als erstes 'local_lc'. 
+'local_lc' wird aber in Zeile 26 in einer if-Abfrage dazu genutzt wird, die Korrektheit 
+des Passwortes festzustellen. 
+Ist 'local_lc' gleich '0', ist das Passwort falsch. Sonst ist das Passwort richtig. 
+Da durch den Buffer-Overflow 'local_lc' mit einem Zeichen überschrieben wurde, 
+welches nicht '0' ist, verhält sich das Programm, als ob das Passwort richtig wäre.
+
+Eine Möglichkeit, den Angriff zu verhindern, ist, 'strncpy' statt 'strcpy' zu verwenden.
+Alternativ könnte vor dem Aufruf von 'strcpy' die Länge des Strings überprüft werden.
+Ausserdem könnten skalare Variablen vor Buffern deklariert werden, sodass die skalaren 
+Variablen vor den Buffern auf dem Stack liegen und so bei einem Buffer-Overflow keine 
+skalaren Variablen überschrieben werden können. 
+Eine weitere drastische Maßnahme wäre, eine andere Programmiersprache wie Java oder eine 
+interpretierte Sprache zu verwenden, da bei diesen Buffer-Overflows nicht möglich sind.
+
+Eine Möglichkeit, Buffer-Overflows zu entdecken, ist jede Einagbemöglichkeit mit sehr 
+langen Eingaben zu testen, um einen Buffer-Overflow zu provozieren.
+Eine einfache Möglichkeit, jeden möglichen Buffer-Overflow zu entdecken, gibt es jedoch nicht. 
+Um Programme auf diese Sicherheitslücke zu untersuchen, muss sich jede Verwendung von Buffern 
+genau angeschaut werden. 
+
+Um zu verhindern, dass ein Angreifer auf den gesamten Arbeitsspeicher zugreifen kann, benutzt 
+Linux zum Beipiel Stack Canaries. Dies sind bestimmte Werte, die auf dem Stack zwischen 
+der Rücksprungadresse und den lokalen Variablen gelegt werden. Diese Werte werden regelmäßig, 
+zum Beispiel vor dem Sprung zur Rücksprungadresse, überprüft. Ist der Wert verändert worden, 
+wird das Programm abgebrochen. SO wird verhindert, dass die Rücksprungadresse verändert wird. 
+Zudem verwendet Linux Paging und Virtual Memory. Der Arbeitsspeicher wird also in Blöcke 
+aufgeteilt, welche eine virtuelle Adresse haben. Versucht ein Programm auf eine Adresse 
+ausserhalb des eigenen Blocks zuzugreifen, entsteht ein Page Fault, sodass das Programm 
+unterbrochen wird. 
+
+
+
+
+
+Mit gdb:
+- Öffne Terminal im selben Ordner wie 'ncd' Executable 
+- Starte gdb
+- 'file ncd'
+- 'disassemble main'
+
+user1@vm:/media/sf_OneDrive/Informatik_CAU/IT-Sicherheit_Praktikum/A_Buffer_Overflow/ncd64$ gdb 
+GNU gdb (Ubuntu 8.1.1-0ubuntu1) 8.1.1
+Copyright (C) 2018 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+(gdb) disassemble main
+No symbol table is loaded.  Use the "file" command.
+(gdb) file ncd
+Reading symbols from ncd...(no debugging symbols found)...done.
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004005e0 <+0>:	push   %rbp
+   0x00000000004005e1 <+1>:	mov    %rsp,%rbp
+   0x00000000004005e4 <+4>:	sub    $0x40,%rsp
+   0x00000000004005e8 <+8>:	movl   $0x0,-0x4(%rbp)
+   0x00000000004005ef <+15>:	mov    %edi,-0x8(%rbp)
+   0x00000000004005f2 <+18>:	mov    %rsi,-0x10(%rbp)
+   0x00000000004005f6 <+22>:	cmpl   $0x3,-0x8(%rbp)
+   0x00000000004005fd <+29>:	je     0x400628 <main+72>
+   0x0000000000400603 <+35>:	lea    0x4007cc,%rdi
+   0x000000000040060b <+43>:	mov    -0x10(%rbp),%rax
+   0x000000000040060f <+47>:	mov    (%rax),%rsi
+   0x0000000000400612 <+50>:	mov    $0x0,%al
+   0x0000000000400614 <+52>:	callq  0x4004d0 <printf@plt>
+   0x0000000000400619 <+57>:	movl   $0x1,-0x4(%rbp)
+   0x0000000000400620 <+64>:	mov    %eax,-0x2c(%rbp)
+   0x0000000000400623 <+67>:	jmpq   0x4006cf <main+239>
+   0x0000000000400628 <+72>:	movl   $0x0,-0x14(%rbp)
+   0x000000000040062f <+79>:	mov    -0x10(%rbp),%rax
+   0x0000000000400633 <+83>:	mov    0x8(%rax),%rdi
+   0x0000000000400637 <+87>:	callq  0x4004c0 <strlen@plt>
+   0x000000000040063c <+92>:	cmp    $0x8,%rax
+   0x0000000000400642 <+98>:	jne    0x400679 <main+153>
+   0x0000000000400648 <+104>:	lea    0x4007e9,%rsi
+   0x0000000000400650 <+112>:	movabs $0x8,%rdx
+   0x000000000040065a <+122>:	mov    -0x10(%rbp),%rax
+   0x000000000040065e <+126>:	mov    0x8(%rax),%rdi
+   0x0000000000400662 <+130>:	callq  0x4004a0 <strncmp@plt>
+   0x0000000000400667 <+135>:	cmp    $0x0,%eax
+   0x000000000040066c <+140>:	jne    0x400679 <main+153>
+   0x0000000000400672 <+146>:	movl   $0x1,-0x14(%rbp)
+   0x0000000000400679 <+153>:	lea    -0x28(%rbp),%rdi
+   0x000000000040067d <+157>:	mov    -0x10(%rbp),%rax
+   0x0000000000400681 <+161>:	mov    0x10(%rax),%rsi
+   0x0000000000400685 <+165>:	callq  0x4004b0 <strcpy@plt>
+   0x000000000040068a <+170>:	cmpl   $0x0,-0x14(%rbp)
+   0x0000000000400691 <+177>:	mov    %rax,-0x38(%rbp)
+   0x0000000000400695 <+181>:	je     0x4006b6 <main+214>
+   0x000000000040069b <+187>:	lea    0x4007f2,%rdi
+   0x00000000004006a3 <+195>:	lea    -0x28(%rbp),%rsi
+   0x00000000004006a7 <+199>:	mov    $0x0,%al
+   0x00000000004006a9 <+201>:	callq  0x4004d0 <printf@plt>
+   0x00000000004006ae <+206>:	mov    %eax,-0x3c(%rbp)
+   0x00000000004006b1 <+209>:	jmpq   0x4006c8 <main+232>
+   0x00000000004006b6 <+214>:	lea    0x400817,%rdi
+   0x00000000004006be <+222>:	mov    $0x0,%al
+   0x00000000004006c0 <+224>:	callq  0x4004d0 <printf@plt>
+   0x00000000004006c5 <+229>:	mov    %eax,-0x40(%rbp)
+   0x00000000004006c8 <+232>:	movl   $0x0,-0x4(%rbp)
+   0x00000000004006cf <+239>:	mov    -0x4(%rbp),%eax
+   0x00000000004006d2 <+242>:	add    $0x40,%rsp
+   0x00000000004006d6 <+246>:	pop    %rbp
+   0x00000000004006d7 <+247>:	retq   
+End of assembler dump.
+
+
+https://www.geeksforgeeks.org/memory-layout-of-c-program/
+https://m.heise.de/security/artikel/Ein-Haufen-Risiko-270800.html?seite=all
+https://www.freecodecamp.org/news/buffer-overflow-attacks/
+https://www.sans.org/blog/stack-canaries-gingerly-sidestepping-the-cage/

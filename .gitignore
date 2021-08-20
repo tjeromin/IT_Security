@@ -1,3 +1,11 @@
+# latex
+*.aux
+*.dvi
+*.log
+*.gz
+*/ncd64
+
+
 # Prerequisites
 *.d
 
