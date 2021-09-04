@@ -48,7 +48,8 @@
 \begin{document}
 	\maketitle
 	
-	
+	\section*{Teil 1: Non-Control Data Attack (Buffer Overflow)}
+		
 	\section*{Hintergrundwissen}
 	Ein Programm in C ist in folgende Speicherbereiche aufgeteilt:
 	\begin{itemize}
@@ -133,8 +134,6 @@
 	Ein Heap-Overflow tritt auf, wenn mehr Daten in den Heap geschrieben werden sollen, als Speicherplatz für 
 	den Heap verfügbar ist.
 	\bigskip
-	
-	\section*{Teil 1: Non-Control Data Attack (Buffer Overflow)}
 	
 	Um den ersten Teil des Versuches durchzuführen, haben wir folgende Schritte durchgeführt:
 	
@@ -246,6 +245,7 @@
 	unterbrochen wird. 
 	\bigskip
 
+
 \section*{Teil 2: Format String Attack}
 	
 	
@@ -260,7 +260,7 @@
 	\bigskip
 	
 	\textbf{Format String Attack} \\
-	Format String Attacks bezeichen eine Sicherheitslücke in der Programmierung, bei der Angreifer ein Programm zum Absturz bringen, aber auch potentiell schädlichen Code auszuführen können.
+	Format String Attacks bezeichen eine Sicherheitslücke in der Programmierung, bei der Angreifer ein Programm zum Absturz bringen, aber auch potentiell schädlichen Code auszuführen kann.
 	Es handelt sich hierbei nicht um Sicherheitslücken im klassischen Sinne, viel eher ist es bei Format String Attacks möglich sich Bugs im Code zu Nutze zu machen.
 	\bigskip
 	
@@ -281,7 +281,7 @@
 	\bigskip
 	
 	\textbf{Fragestellung: Wie funktioniert eine Format String Attack grundsätzlich?} \\
-	Bei der Format String Attack macht sich der Angreifer eine fehlerhafte Implementation der \textit{printf( )-Funktion} zu Nutze. Wird in dieser kein Format String angegeben, so ist es möglich diese Schwachstelle auszunutzen, indem man einen String übergibt, der gültige \textbf{Format-Parameter} enthält. Diese werden dann als \textit{Format String} interpretiert und ausgeführt, wodurch vom Speicher gelesen wird, was der Angreifer schadhaft ausnutzen kann. Die \textit{Format Funktion} ließt dann einfach die nächsten Daten des Speichers, wodurch es zum Kontrollverlust über den Prozess kommen kann.
+	Bei der Format String Attack macht sich der Angreifer eine fehlerhafte Implementation der \texttt{printf( )-Funktion} zu Nutze. Wird in dieser Funktion als erster Parameter ein Buffer angegeben, der eine Benutzereingabe enthält, so ist es möglich diese Schwachstelle auszunutzen, indem der Nutzer einen String übergibt, der gültige \textit{Format-Parameter} enthält. Diese werden dann als \textit{Format String} interpretiert und ausgeführt, wodurch vom Speicher gelesen wird, was der Angreifer schadhaft ausnutzen kann. Die \textit{Format Funktion} ließt dann einfach die nächsten Daten des Speichers, wodurch es zum Kontrollverlust über den Prozess kommen kann.
 	\bigskip
 	
 	Um den zweiten Teil des Versuches durchzuführen, haben wir folgende Schritte durchgeführt:
@@ -290,21 +290,23 @@
 		\item Herunterladen des C-Programms fmtstr.c
 		\item Kompilieren des C-Programms fmtstr.c mittels gcc $\rightarrow$ führt zu zwei Warnings, aber zu keinem Error:
 			\begin{center}
-			\includegraphics[scale=0.3]{compilation.png}
+			\includegraphics[scale=0.6]{compilation.png}
 			\captionof{figure}{Kompilieren des Quellcodes}
 			\end{center}
-		\item Durch Eingabe zur Laufzeit des unveränderten Programms soll der Wert der Variable \textbf{x} verändert werden  $\rightarrow$ Eingabe: "\%x \%x \%x \%x \%x \%x \%x \%x \%n"
+		\item Durch Eingabe zur Laufzeit des unveränderten Programms soll der Wert der Variable \textbf{x} verändert werden. Dafür haben wir mit \%n als Eingabe angefangen, um den Wert der Variable zu verändern und durch Ausprobieren mit jedem weiteren Versuch ein \%x ergänzt. Durch die Erhöhung der Anzahl der eingegebenen \%x wurde immer ein anderer Speicherplatz auf dem Stack verändert. Die Lösung erhielten wir mit der Eingabe: \\
+		 "\%x \%x \%x \%x \%x \%x \%x \%x \%n"
 		\item Das Vorzeichen der Variable \textbf{x} soll nun durch eine weitere Eingabe umgedreht werden $\rightarrow$ Eingabe "\%155x \%9\$n"
+		Diese Eingabe setzt sich zusammen aus \%9\$n und \%155x , wodurch an der 9. Stelle des Stacks der aktuelle Wert überschrieben wird, wo die Variable x liegt. \%155x gibt an, dass mindestens 155 Zeichen geschrieben werden sollen. Diesen Wert haben wir uns durch Ausprobieren erschlossen.
 		\begin{center}
-		\includegraphics[scale=0.3]{Teil2.png}
+		\includegraphics[scale=0.6]{Teil2.png}
 		\captionof{figure}{Verändern von x}
 		\end{center}
 	\end{enumerate}
 
-	Durch Veränderung der Print-Anweisung in Zeile 30 (siehe Figure 3) ist es einem Angreifer nun nicht mehr möglich dem Compiler einen eigenen Format String zu übergeben und ein Angriff wird so verhindert, da die Variable \textbf{buf} nun nur noch als String, also als Daten-Parameter, interpretiert wird.
+	Durch Veränderung der Print-Anweisung in Zeile 30 (siehe Figure 4) ist es einem Angreifer nun nicht mehr möglich dem Compiler einen eigenen Format String zu übergeben und ein Angriff wird so verhindert, da die Variable \textbf{buf} nun nur noch als String, also als Daten-Parameter, interpretiert wird.
 
 \begin{center}
-	\includegraphics[scale=0.3]{betterCode.png}
+	\includegraphics[scale=0.4]{betterCode.png}
 	\captionof{figure}{Verbesserter Quellcode}
 \end{center}
 	
@@ -313,12 +315,16 @@
 	Eine einfache Möglichkeit Format String Angriffe zu verhindern oder erschweren ist die Analyse des Programmcodes. Wird einer Format Funktion wie \textit{printf( )} nur ein Wert übergeben, so kann man davon ausgehen, dass hier ein Angriff möglich ist. Schwachstellen werden so effizient vermieden und die Analyse lässt sich auch automatisiert ausführen. Trotz aller Einfachheit ist hierbei zu beachten, dass ausreichende Programmierkenntnisse notwendig sind um Patches zu erstellen und Quellcodes zur manuellen Analyse häufig zu komplex sind. 
 	\bigskip
 
-	Eine weitere Möglichkeit zur Prävention ist das Prüfen auf Speichergrenzen von Variablen während der Programmausführung. So können Buffer Overflows während der Laufzeit erkannt und Angriffe vermieden werden. Um diese Maßnahme anwenden zu können, muss der Quellcode jedoch überarbeitet werden und auch die Performanz kann darunter leiden.
+	Eine weitere Möglichkeit zur Prävention ist das automatische Prüfen auf Speichergrenzen von Variablen während der Programmausführung durch alternative Bibliotheksfunktionen. So können Buffer Overflows während der Laufzeit erkannt und Angriffe vermieden werden. Um diese Maßnahme anwenden zu können, muss der Quellcode jedoch überarbeitet werden und auch die Performanz kann darunter leiden.
 	\bigskip
 	
 	\textbf{Wie lässt sich einfach herausfinden, ob ein derartiger Angriff vermutlich möglich ist?} \\
 	Durch eine Analyse des Quelltextes lässt sich einfach herausfinden, ob ein Format String Angriff möglich ist. Hierbei gilt es herauszufinden, wie viele Werte einer Funktion der printf( )-Familie übergeben werden. Bekommt die Funktion nur einen Wert übergeben, so wird dies ials eine Art benutzerdefiniertes Format interpretiert. Werden jedoch mehr als ein Wert übergeben, so ist davon auszugehen, dass die Format Strings fest vorgegeben sind und ein derartiger Angriff nicht möglich ist. 
 	\bigskip
 	
+	\section*{Reflektion}
+	Zu Beginn der Bearbeitung des Versuchs haben wir uns getrennt voneinander mit der Literatur auseinandergesetzt und den Versuch bearbeitet. Danach haben wir gemeinsam unsere neuen Erkenntnisse in dieser Dokumentation zusammengebracht, was unser Verständnis noch einmal vertieft hat.\\
+	Zusammenfassend war dieser Versuch für uns durch die angegebenen Quellen gut vorzubereiten. Eine Einarbeitung war zwingend notwendig, da der Versuch nur durch unser Wissen aus bisherigen Vorlesungen nicht durchführbar gewesen wäre.\\
+	Sowohl im Teil 1, als auch im Teil 2 haben wir unterschiedliche Lösungsansätze getestet, welche oftmals nicht beim ersten Mal zum Erfolg geführt haben. Dadurch mussten wir viel Zeit mit der Bearbeitung verbringen.
 	
 \end{document}
