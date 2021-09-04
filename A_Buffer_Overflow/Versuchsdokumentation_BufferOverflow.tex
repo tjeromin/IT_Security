@@ -293,13 +293,12 @@
 			\includegraphics[scale=0.3]{compilation.png}
 			\captionof{figure}{Kompilieren des Quellcodes}
 			\end{center}
-		\item Einfaches Ausführen des Programms ohne Kommandozeilenargumente führt zu folgender Ausgabe:
-		\begin{center}
-			\includegraphics[scale=0.8]{ohneCmdln.png}
-			\captionof{figure}{Ausführen des Quellcodes}
-		\end{center}
 		\item Durch Eingabe zur Laufzeit des unveränderten Programms soll der Wert der Variable \textbf{x} verändert werden  $\rightarrow$ Eingabe: "\%x \%x \%x \%x \%x \%x \%x \%x \%n"
 		\item Das Vorzeichen der Variable \textbf{x} soll nun durch eine weitere Eingabe umgedreht werden $\rightarrow$ Eingabe "\%155x \%9\$n"
+		\begin{center}
+		\includegraphics[scale=0.3]{Teil2.png}
+		\captionof{figure}{Verändern von x}
+		\end{center}
 	\end{enumerate}
 
 	Durch Veränderung der Print-Anweisung in Zeile 30 (siehe Figure 3) ist es einem Angreifer nun nicht mehr möglich dem Compiler einen eigenen Format String zu übergeben und ein Angriff wird so verhindert, da die Variable \textbf{buf} nun nur noch als String, also als Daten-Parameter, interpretiert wird.
