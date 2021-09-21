@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style.css" />
+        <title>Forum</title>
+        <base href="/" />
+    </head>
+    <body>
+        % include('templates/menubar.html', username=username, isAdmin=isAdmin)
+        <div id="content">
+            <div id="forum">
+                <h1>Forum</h1>
+                <p>Leave a message!</p>
+                <form action="" method="post">
+                    <textarea name="message" rows="3"></textarea>
+                    <br />
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div id="messages">
+                % for message in messages:
+                <div>
+                    <h5>{{message[0]}}</h5>
+                    <p>{{message[1]}}</p>
+                </div>
+                % end
+            </div>
+        </div>
+    </body>
+</html>

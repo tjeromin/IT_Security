@@ -1,0 +1,13 @@
+
+Teil 1:
+- 
+
+Teil 3:
+- Input validation
+	- Use regular expressions as whitelists for structured data (such as name, age, income, survey response, zip code) to ensure strong input validation. 
+	- In case of a fixed set of values (such as drop-down list, radio button), determine which value is returned. The input data should match one of the offered options exactly.
+- Parameterized queries are a means of pre-compiling an SQL statement so that you can then supply the parameters in order for the statement to be executed. 
+	This method makes it possible for the database to recognize the code and distinguish it from input data.
+- Always use character-escaping functions for user-supplied input provided by each database management system (DBMS). 
+	This is done to make sure the DBMS never confuses it with the SQL statement provided by the developer.
+	

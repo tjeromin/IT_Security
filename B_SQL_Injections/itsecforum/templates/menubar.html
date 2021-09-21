@@ -1,0 +1,10 @@
+        <nav id="menu">
+            <a href="">Home</a>
+            % if isAdmin:
+            <a href="users">Manage Users</a>
+            % end
+            <a href="logout">Logout</a>        
+        </nav>
+        <div id="greeting">
+            Hello {{username}}!
+        </div>

@@ -1,0 +1,199 @@
+/* Custom stylesheet mimicking Bootstrap **/
+
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+nav {
+    background-color: #007bff;
+    display: block;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    position: relative;
+    list-style: none;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.125), 0 6px 20px 0 rgba(0, 0, 0, 0.125);
+}
+
+nav a {
+    display: inline-block;
+    padding: .75rem 1rem;
+    color: #fff;
+}
+
+nav a:hover {
+    background-color: #7babff;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+button, input, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    overflow: visible;
+}
+
+button {
+    cursor: pointer;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: button;
+}
+
+input, textarea {
+    display: block;
+    width: 90%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+textarea {
+    height: auto;
+    overflow: auto;
+    resize: vertical;
+}
+
+div#main, div#greeting, div#content {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+div#main {
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .5rem;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.125), 0 6px 20px 0 rgba(0, 0, 0, 0.125);
+}
+
+div#forum, div#messages {
+  display: inline-block;
+  width: 40%;
+  vertical-align: top;
+}
+
+div#forum {
+    margin-right: 1rem;
+}
+
+div#greeting {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    margin-top: 1rem;
+    /*box-shadow: 0 4px 8px 0 rgba(0,0,0,.125), 0 6px 20px 0 rgba(0, 0, 0, 0.125);*/
+}
+
+div#messages div {
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.125), 0 6px 20px 0 rgba(0, 0, 0, 0.125);
+}
+
+div#messages div h5 {
+    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+div#messages div p {
+    margin: 0;
+    padding: .5rem 1.25rem;
+}
+
+
+table {
+    word-wrap: break-word;
+    background-color: rgba(0,0,0,.125);
+    background-clip: border-box;
+    padding: 0;
+    border-radius: .25rem;
+    border: 1px solid rgba(0,0,0,.125);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.125), 0 6px 20px 0 rgba(0, 0, 0, 0.125);
+}
+
+thead {
+    padding: .75rem 1.25rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+tbody {
+    margin: 0;
+    padding: .5rem 1.25rem;
+    background-color: #fff;
+}
+
+th, td {
+    margin: 0;
+    padding-left: .5rem;
+    padding-right: 1.5rem;
+}
