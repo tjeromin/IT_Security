@@ -1,0 +1,45 @@
+
+- Finden Sie heraus, welche Hashfunktionen GnuPG unterstützt. 
+SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+
+- MD5:
+	- Thirdly, similar to messages, you can also generate different files that hash to the same value so using MD5 as a file checksum is 'broken'.
+
+- SHA512
+	- Secure if used correctly, few attacks
+
+- RIPEMD160
+	- Old, but unbroken. 
+	- Cryptographers generallly aim for 128 to 256 bits of security. RIPEMD only offers 160 / 2 = 80 bits due to the birthday bound, 
+	  which approximately halves the amount of security offered. 
+
+
+- Kollision
+	- Eine Funktion (in diesem Zusammenhang fast immer eine Einwegfunktion) wird als kollisionsresistent bezeichnet, wenn es „schwer“ ist, 
+	  verschiedene Eingaben zu finden, die auf denselben Wert abgebildet werden. Insbesondere bei kryptographischen 
+	  Hashfunktionen handelt es sich hierbei um eine übliche Anforderung, deren Bruch in der Regel als Bruch der 
+	  kompletten Hashfunktion betrachtet wird. 
+
+
+- Symmetrischer Schlüssel
+	- Beide Parteien haben den gleichen Schlüssel
+	- Wird zum Ver- und Entschlüsseln benutzt
+	- Je länger der Schlüssel, desto sicherer
+	- Schneller als asymmetrisch
+	- Für jeden Kommunikationspartner ein Schlüssel -> sehr viele Schlüssel
+	
+- Asymmetrische Verschlüsselung
+	- Ein privater und ein öffentlicher SChlüssel für jeden Kommunikationspartner
+	- Eine mit dem public key verschlüsselte Nachricht kann nur mit dem private key entschlüsselt werden und andersherum
+	
+- Schlüsselpaar
+	- private und public key
+	
+- Schlüsselring
+
+- Digitale Signatur 
+	- Eine digitale Signatur, auch digitales Signaturverfahren, ist ein asymmetrisches Kryptosystem, 
+	  bei dem ein Sender mit Hilfe eines geheimen Signaturschlüssels (dem Private Key) zu einer digitalen Nachricht 
+	  (d. h. zu beliebigen Daten) einen Wert berechnet, der ebenfalls digitale Signatur genannt wird. Dieser Wert 
+	  ermöglicht es jedem, mit Hilfe des öffentlichen Verifikationsschlüssels (dem Public Key) die nichtabstreitbare 
+	  Urheberschaft und Integrität der Nachricht zu prüfen.
