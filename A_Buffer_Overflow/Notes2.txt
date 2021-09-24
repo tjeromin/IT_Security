@@ -1,0 +1,13 @@
+test
+x = 100
+Eingabe: %x %x %x %x %x %x %x %x %n
+cec7001b cea4b9f0 20782520 cec7001b 0 8dbe19b8 0 0 
+x = 51
+
+
+test
+x = 100
+Eingabe: %155x %9$n
+                                                                                                                                                   7d39800b 
+x = -100
+

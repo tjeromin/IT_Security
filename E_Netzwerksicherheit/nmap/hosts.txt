@@ -1,0 +1,33 @@
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-24 14:39 UTC
+Nmap scan report for tinoVM (172.18.0.1)
+Host is up (0.0000050s latency).
+Not shown: 998 closed ports
+PORT     STATE SERVICE
+80/tcp   open  http
+3001/tcp open  nessus
+MAC Address: 02:42:0A:B1:64:F7 (Unknown)
+
+Nmap scan report for it-sec-2.e_netzwerksicherheit_default (172.18.0.2)
+Host is up (0.0000070s latency).
+All 1000 scanned ports on it-sec-2.e_netzwerksicherheit_default (172.18.0.2) are closed
+MAC Address: 02:42:AC:12:00:02 (Unknown)
+
+Nmap scan report for firefox.e_netzwerksicherheit_default (172.18.0.3)
+Host is up (0.0000070s latency).
+Not shown: 999 closed ports
+PORT     STATE SERVICE
+3389/tcp open  ms-wbt-server
+MAC Address: 02:42:AC:12:00:03 (Unknown)
+
+Nmap scan report for wireshark.e_netzwerksicherheit_default (172.18.0.4)
+Host is up (0.0000070s latency).
+Not shown: 999 closed ports
+PORT     STATE SERVICE
+3389/tcp open  ms-wbt-server
+MAC Address: 02:42:AC:12:00:04 (Unknown)
+
+Nmap scan report for 17b47363d3f4 (172.18.0.5)
+Host is up (0.0000030s latency).
+All 1000 scanned ports on 17b47363d3f4 (172.18.0.5) are closed
+
+Nmap done: 256 IP addresses (5 hosts up) scanned in 2.36 seconds

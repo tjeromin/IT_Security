@@ -1,0 +1,9 @@
+geheimesPasswort123
+
+blue' <a onmouseover="alert(1)" href="#">read this!</a> '
+
+style='color:blue' <a onmouseover="alert(1)" href="#">read this!</a> ''
+
+<a href='https://evil.example.com/login'>Sign in</a> | <a href='https://evil.example.com/newaccount.gtl'>Sign up</a>
+
+<a href='/{{_unique_id}}/editprofile.gtl'>Profile</a> | <a href='https://eveisev.il'>Sign out</a>

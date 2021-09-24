@@ -1,0 +1,13 @@
+
+1:
+- see ip address
+ip addr
+- scan hosts
+nmap -sn 172.18.0.0/24
+- scan ports
+nmap 172.18.0.0/24
+- scan services
+nmap -sV -O 172.18.0.0/24 > nmap-services.txt
+- scan all ports
+nmap -p- 172.18.0.2
+- 

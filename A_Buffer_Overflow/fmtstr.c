@@ -24,7 +24,7 @@ main (int argc, char *argv[])
   fflush (stdout);
 
   if (fgets (buf, sizeof buf, stdin))
-    printf (buf);
+    printf ("%s", buf);
 
   printf ("x = %d\n", x);
 

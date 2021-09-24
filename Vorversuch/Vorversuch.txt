@@ -1,0 +1,152 @@
+1. 	Findet mit Hilfe von whereis heraus, an welchem Ort sich die Anwendung ls befindet. 
+	Wofür könnt ihr whereis noch verwenden? Macht euch dafür mit man (also zum Beispiel man whereis)
+	vertraut.
+
+	whereis - locate the binary, source, and manual page files for a command
+	user1@vm:~$ whereis ls
+	ls: /bin/ls /usr/share/man/man1/ls.1.gz
+	
+	man - an interface to the on-line reference manuals
+
+2.	Findet heraus, in welcher Datei unter Linux die Passwörter gespeichert sind und schaut euch diese an. 
+	Was fällt auf? Verändert das Passwort eines Benutzers.
+	
+	Passwörter als hash in etc/shadow
+	Geänderte Passwörter funktionieren nicht.
+	
+3. 	Wo finden sich die Benutzer-IDs auf dem Rechner und die Verbindung zum jeweiligen Benutzer?
+	
+	User mit UID in etc/passwd
+
+4.	Was ist für das System ausschlaggebend, Benutzername oder uid (Benutzer-ID)?
+
+	uid
+
+5.	Wie lässt sich nachschauen, als welcher Benutzer ihr angemeldet seid?
+	
+	whoami / who
+	
+6.	Macht euch mit dem Aufbau der Datei /etc/passwd vertraut. Welche uid hat der Benutzer "nobody"? 
+	Könnt ihr euch als "nobody" einloggen? Welche Shell ist diesem Benutzer zugeordnet?
+	
+	username : password : uid : primary gid : gecos(comments) : home directory : command/shell
+	
+	nobody uid = 65534
+	kein login möglich
+	/usr/sbin/nologin
+
+7.	Räumt einem Benutzer per Bash das Recht ein, die Anwendung sudo zu benutzen.
+
+	user1@vm:/etc$ adduser user42
+	adduser: Only root may add a user or group to the system.
+	user1@vm:/etc$ sudo adduser user42
+	[sudo] password for user1: 
+	Adding user `user42' ...
+	Adding new group `user42' (1005) ...
+	Adding new user `user42' (1005) with group `user42' ...
+	Creating home directory `/home/user42' ...
+	Copying files from `/etc/skel' ...
+	Enter new UNIX password: 
+	Retype new UNIX password: 
+	passwd: password updated successfully
+	user1@vm:/etc$ sudo usermod -aG sudo user42
+	user1@vm:/etc$ groups user42
+	user42 : user42 sudo
+	user1@vm:/etc$ 
+	
+	The -aG option tells the system to append the user to the specified group
+	
+8.	Wie lassen sich die Zugriffsrechte von Dateien und Ordnern einsehen?
+
+	ls -l name
+	
+	-			rwx		rwx		rwx
+	file type	user	group	others
+	
+	user1@vm:/bin$ ls -l bash
+	-rwxr-xr-x 1 root root 1113504 Jun  7  2019 bash
+
+9.	Wie sehen die Rechte der Anwendung passwd aus? Warum?
+
+	user1@vm:/$ ls -l usr/bin/passwd
+	-rwsr-xr-x 1 root root 59640 Mar 22  2019 usr/bin/passwd
+	
+	Nur root kann die Anwendung verändern, alle anderen user können nur lesen und ausführen.
+	s bedeutet die Anwendung wechselt zu root. Man muss sie also nicht mit sudo aufrufen.
+	
+10.	Wie sehen die Rechte des Verzeichnisses /tmp aus? Warum?
+
+	user1@vm:/$ ls -ld tmp 
+	drwxrwxrwt 16 root root 4096 Jul  3 15:07 tmp
+	
+	In tmp werden temporäre Dateien von verschiedenen usern gespeichert.
+	Daher kann jeder user Dateien/Ordner erstellen verändern usw.
+	t ist das "sticky-bit" und bedeutet, dass nur derjenige user oder root, der eine Datei/Ordner
+	erstellt hat, sie auch löschen oder umbenennen darf.
+	
+11.	Macht euch mit den Anwendungen touch, mkdir, rm, rmdir und cp vertraut.
+
+	touch - change file timestamps or create file 
+	
+	mkdir - make directories
+	
+	rm - remove files and directories
+	
+	cp - copy files and directories
+
+12. Erstellt mindestens einen Ordner mit mindestens einem Unterordner und mindestens einer Datei. 
+	Benutzt dabei ausschließlich die oben genannten Anwendungsprogramme.
+	
+	user1@vm:~$ mkdir dir1
+	user1@vm:~$ cd dir1
+	user1@vm:~/dir1$ touch file1
+	user1@vm:~/dir1$ mkdir dir2
+	user1@vm:~/dir1$ ls
+	dir2  file1
+	user1@vm:~/dir1$ cd dir2
+	user1@vm:~/dir1/dir2$ touch file2
+	user1@vm:~/dir1/dir2$ ls
+	file2
+	user1@vm:~/dir1/dir2$ 
+	
+13.	Kopiert den oder die Ordner mit den Unterverzeichnissen und Dateien rekursiv an eine andere Stelle.
+
+	user1@vm:~$ ls
+	bin  config  Desktop  dir1  Documents  Downloads  Music  Pictures  Public  Templates  testCopy  Videos
+	user1@vm:~$ cp dir1 dirCopy -r
+	user1@vm:~$ ls
+	bin     Desktop  dirCopy    Downloads  Pictures  Templates  Videos
+	config  dir1     Documents  Music      Public    testCopy
+	user1@vm:~$ cd dirCopy/
+	user1@vm:~/dirCopy$ ls
+	dir2  file1
+	user1@vm:~/dirCopy$ 
+	
+14.	Löscht die ursprünglichen Ordner und Dateien rekursiv.
+
+	user1@vm:~$ ls
+	bin     Desktop  dirCopy    Downloads  Pictures  Templates  Videos
+	config  dir1     Documents  Music      Public    testCopy
+	user1@vm:~$ rm dir1 -r
+	user1@vm:~$ ls
+	bin  config  Desktop  dirCopy  Documents  Downloads  Music  Pictures  Public  Templates  testCopy  Videos
+	user1@vm:~$ 
+	
+15.	Installiert ein Paket mittels apt-get und entfernt dieses Paket anschließend wieder. 
+
+	sudo apt-get install package
+	sudo apt-get remove package
+	sudo apt-get purge package % Führt auch remove aus
+	
+
+
+
+
+
+	
+
+
+	
+
+
+

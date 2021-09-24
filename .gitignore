@@ -5,6 +5,8 @@
 *.gz
 */ncd64
 
+bin/
+.idea/
 
 # Prerequisites
 *.d

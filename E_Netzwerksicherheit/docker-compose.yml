@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  it-sec-1:
+    image: livho/it-sec-1
+    container_name: it-sec-1
+    volumes:
+      - ./caplets:/root/caplets
+    tty: true
+  it-sec-2:
+    image: livho/it-sec-2
+    container_name: it-sec-2
+    ports:
+      - 62580:62580
+    restart: unless-stopped
+  wireshark:
+    image: ghcr.io/linuxserver/wireshark
+    container_name: wireshark
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ./wireshark-config:/config
+    ports:
+      - 3001:3000 #optional
+    restart: unless-stopped
+  firefox:
+    image: ghcr.io/linuxserver/firefox
+    container_name: firefox
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./firefox-config:/config
+    ports:
+      - 3002:3000
+    shm_size: "1gb"
+    restart: unless-stopped
