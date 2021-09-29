@@ -1,0 +1,18 @@
+DanDIumAHenT
+
+ECHO_SERVICE
+./echo_client 192.168.88.130
+40
+012345678901234567
+
+PORT_SERVICE
+gcc -o client client.c
+./client
+
+ENIGMA
+./new_client
+
+GHISTORY
+ftp ip
+get res.tar
+tar -xvf res.tar
